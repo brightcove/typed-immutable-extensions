@@ -1,0 +1,30 @@
+{
+  "name": "typed-immutable-extensions",
+  "version": "0.1.0",
+  "description": "Extensions on top of typed-immutable to make it better",
+  "main": "src/index.js",
+  "scripts": {
+    "pretest": "npm run lint",
+    "test": "nyc --reporter html --reporter text mocha",
+    "lint": "eslint src test",
+    "jsdoc": "jsdoc src -c jsdoc.conf.json",
+    "jsdoc:md": "jsdoc2md --files src/index.js > docs/API.md",
+    "jsdoc:all": "npm run jsdoc && npm run jsdoc:md"
+  },
+  "author": "Ted Janeczko <tjaneczko@brightcove.com>",
+  "license": "UNLICENSED",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^5.3.0",
+    "jsdoc": "^3.5.5",
+    "jsdoc-to-markdown": "^4.0.1",
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.2",
+    "tui-jsdoc-template": "^1.2.2",
+    "typed-immutable": "^0.1.2"
+  },
+  "peerDependencies": {
+    "typed-immutable": "^0.1.2"
+  }
+}
