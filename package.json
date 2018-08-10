@@ -2,8 +2,10 @@
   "name": "typed-immutable-extensions",
   "version": "0.1.0",
   "description": "Extensions on top of typed-immutable to make it better",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "scripts": {
+    "build": "babel src --out-dir lib",
+    "build:all": "npm run build && npm run jsdoc:all",
     "pretest": "npm run lint",
     "test": "nyc --reporter html --reporter text mocha",
     "lint": "eslint src test",
@@ -15,6 +17,8 @@
   "license": "UNLICENSED",
   "dependencies": {},
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
     "eslint": "^5.3.0",
     "jsdoc": "^3.5.5",
