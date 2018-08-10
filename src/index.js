@@ -38,11 +38,11 @@ function extend (BaseRecord, descriptor, label) {
       value: BaseRecord.prototype.size + entries.length,
     },
     [Typed.type]: {
-      value: type
+      value: type,
     },
     [Typed.label]: {
-      value: label
-    }
+      value: label,
+    },
   };
 
   Object.assign(type, BaseRecord.prototype[Typed.type]);
@@ -62,7 +62,7 @@ function extend (BaseRecord, descriptor, label) {
           }
           this.set(key, value);
         },
-        enumerable: true
+        enumerable: true,
       };
     } else {
       throw TypeError(`Invalid field descriptor provided for "${key}" field`);

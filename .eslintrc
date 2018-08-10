@@ -11,6 +11,12 @@
     "no-var": "error",
     "prefer-const": "error",
     "indent": ["error", 2],
-    "curly": ["error", "all"]
+    "curly": ["error", "all"],
+    "comma-dangle": ["error", "always-multiline"],
+    "brace-style": "error",
+    "eqeqeq": ["error", "always", {
+      "null": "ignore"
+    }],
+    "no-multi-spaces": "error"
   }
 }

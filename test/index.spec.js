@@ -16,7 +16,7 @@ describe('Maybe', () => {
 
   it('should allow an undefined value', () => {
     const ValueType = Record({
-      value: Maybe(String)
+      value: Maybe(String),
     });
     const record = new ValueType();
     expect(record.value).to.be.undefined;
@@ -24,7 +24,7 @@ describe('Maybe', () => {
 
   it('should allow a null value', () => {
     const ValueType = Record({
-      value: Maybe(String)
+      value: Maybe(String),
     });
 
     const record = new ValueType({
@@ -35,7 +35,7 @@ describe('Maybe', () => {
 
   it('should allow a value that matches the type', () => {
     const ValueType = Record({
-      value: Maybe(String)
+      value: Maybe(String),
     });
 
     const record = new ValueType({
@@ -46,7 +46,7 @@ describe('Maybe', () => {
 
   it('should not allow a value that does not match the type', () => {
     const ValueType = Record({
-      value: Maybe(String)
+      value: Maybe(String),
     });
 
     expect(() => {
@@ -58,7 +58,7 @@ describe('Maybe', () => {
 
   it('should allow setting a value that matches the type', () => {
     const ValueType = Record({
-      value: Maybe(String)
+      value: Maybe(String),
     });
     let record = new ValueType();
     expect(record.value).to.be.undefined;
@@ -68,7 +68,7 @@ describe('Maybe', () => {
 
   it('should allow setting a null value', () => {
     const ValueType = Record({
-      value: Maybe(String)
+      value: Maybe(String),
     });
     let record = new ValueType();
     expect(record.value).to.be.undefined;
@@ -78,7 +78,7 @@ describe('Maybe', () => {
 
   it('should not allow setting a value that does not match the type', () => {
     const ValueType = Record({
-      value: Maybe(String)
+      value: Maybe(String),
     });
     const record = new ValueType();
     expect(record.value).to.be.undefined;
@@ -89,11 +89,11 @@ describe('Maybe', () => {
   
   it('should allow deleting a value', () => {
     const ValueType = Record({
-      value: Maybe(String)
+      value: Maybe(String),
     });
 
     let record = new ValueType({
-      value: 'foo'
+      value: 'foo',
     });
     expect(record.value).to.equal('foo');
     record = record.delete('value');
@@ -102,7 +102,7 @@ describe('Maybe', () => {
 
   it('should take the default value of the type if supplied', () => {
     const ValueType = Record({
-      value: Maybe('foo')
+      value: Maybe('foo'),
     });
     const record = new ValueType();
     expect(record.value).to.equal('foo');
@@ -110,7 +110,7 @@ describe('Maybe', () => {
 
   it('should use the default value if supplied', () => {
     const ValueType = Record({
-      value: Maybe(String, 'foo')
+      value: Maybe(String, 'foo'),
     });
     const record = new ValueType();
     expect(record.value).to.equal('foo');
@@ -118,7 +118,7 @@ describe('Maybe', () => {
 
   it('should take the supplied default value over the default value of the type', () => {
     const ValueType = Record({
-      value: Maybe('bar', 'foo')
+      value: Maybe('bar', 'foo'),
     });
     const record = new ValueType();
     expect(record.value).to.equal('foo');
@@ -126,10 +126,10 @@ describe('Maybe', () => {
 
   it('should reset to the default value if deleted', () => {
     const ValueType = Record({
-      value: Maybe('foo')
+      value: Maybe('foo'),
     });
     let record = new ValueType({
-      value: 'bar'
+      value: 'bar',
     });
     expect(record.value).to.equal('bar');
     record = record.delete('value');
@@ -419,7 +419,7 @@ describe('Discriminator', () => {
     });
     expect(() => {
       new ValueType({
-        value: 'foo'
+        value: 'foo',
       });
     }).to.throw(/foo is not an object/);
   });
@@ -466,7 +466,7 @@ describe('Discriminator', () => {
     const aRecord = new ValueType({
       value: {
         type: 'a',
-      }
+      },
     });
     expect(aRecord.value).to.be.an.instanceOf(A);
 
@@ -487,7 +487,7 @@ describe('Discriminator', () => {
     });
     const record = new ValueType({
       value: {
-        type: 'asdf'
+        type: 'asdf',
       },
     });
     expect(record.value).to.be.an.instanceOf(C);
@@ -503,11 +503,11 @@ describe('Discriminator', () => {
     let record = new ValueType({
       value: {
         type: 'a',
-      }
+      },
     });
     expect(record.value).to.be.an.instanceOf(A);
     record = record.set('value', {
-      type: 'b'
+      type: 'b',
     });
     expect(record.value).to.be.an.instanceOf(B);
   });
@@ -522,7 +522,7 @@ describe('Discriminator', () => {
     const record = new ValueType({
       value: {
         type: 'a',
-      }
+      },
     });
     expect(() => {
       record.delete('value');
@@ -539,11 +539,11 @@ describe('Discriminator', () => {
     let record = new ValueType({
       value: {
         type: 'a',
-      }
+      },
     });
     expect(record.value).to.be.an.instanceOf(A);
     record = record.set('value', new B({
-      type: 'b'
+      type: 'b',
     }));
     expect(record.value).to.be.an.instanceOf(B);
   });
@@ -559,11 +559,11 @@ describe('Discriminator', () => {
     let record = new ValueType({
       value: {
         type: 'a',
-      }
+      },
     });
     expect(record.value).to.be.an.instanceOf(A);
     record = record.set('value', new B({
-      type: 'c'
+      type: 'c',
     }));
     expect(record.value).to.be.an.instanceOf(C);
   });
@@ -579,7 +579,7 @@ describe('Discriminator', () => {
     let record = new ValueType({
       value: {
         type: 'a',
-      }
+      },
     });
     expect(record.value).to.be.an.instanceOf(A);
     record = record.setIn(['value', 'type'], 'c');
@@ -588,7 +588,7 @@ describe('Discriminator', () => {
 
   it('should work with subtypes of Records', () => {
     class D extends Record({
-      type: String
+      type: String,
     }) {}
     const ValueType = Record({
       value: Discriminator('type', {
