@@ -1,6 +1,86 @@
 const { Record, Typed, typeOf, Any } = require('typed-immutable');
 
 /**
+ * Extends a record type and allows the addition of new fields
+ * 
+ * @param {Record} BaseRecord - Record to extend
+ * @param {object} descriptor - Descriptor object of new fields to add
+ * @param {string} [label] - Label for the new Record type
+ * 
+ * @example
+ * const BaseValue = Record({
+ *   type: String,
+ * });
+ * 
+ * const StringValue = extend(BaseValue, {
+ *   value: String,
+ * });
+ * 
+ * const NumberValue = extend(BaseValue, {
+ *   value: Number,
+ * });
+ */
+function extend (BaseRecord, descriptor, label) {
+  if (!BaseRecord || typeof BaseRecord !== 'function' || !(BaseRecord.prototype instanceof Record)) {
+    throw new TypeError('BaseRecord must be a Record type');
+  }
+  if (!descriptor || typeof(descriptor) !== "object") {
+    throw TypeError('A descriptor of fields is required');
+  }
+
+  const type = Object.create(null);
+  const entries = Object.entries(descriptor);
+  if (!entries.length) {
+    throw new TypeError('At least one field must be defined');
+  }
+  const properties = {
+    size: {
+      value: BaseRecord.prototype.size + entries.length,
+    },
+    [Typed.type]: {
+      value: type
+    },
+    [Typed.label]: {
+      value: label
+    }
+  };
+
+  Object.assign(type, BaseRecord.prototype[Typed.type]);
+
+  for (const [key, value] of entries) {
+    const fieldType = typeOf(value);
+
+    if (fieldType) {
+      type[key] = fieldType;
+      properties[key] = {
+        get: function () {
+          return this.get(key);
+        },
+        set: function (value) {
+          if (!this.__ownerID) {
+            throw TypeError('Cannot set on an immutable record.');
+          }
+          this.set(key, value);
+        },
+        enumerable: true
+      };
+    } else {
+      throw TypeError(`Invalid field descriptor provided for "${key}" field`);
+    }
+  }
+
+  const RecordType = function(structure) {
+    return BaseRecord.call(this, structure);
+  };
+  properties.constructor = {
+    value: RecordType,
+  };
+  RecordType.prototype = Object.create(BaseRecord.prototype, properties);
+
+  return RecordType;
+}
+
+/**
  * Defines an optional type, similar to typed-immutable's [Maybe]{@link https://github.com/typed-immutable/typed-immutable#maybe}, but provides extended options.
  * 
  * Benefits over typed-immutable's Maybe:
@@ -174,6 +254,7 @@ function Discriminator (property, typeMap, defaultType) {
 }
 
 module.exports = {
+  extend,
   Maybe,
   Enum,
   Discriminator,

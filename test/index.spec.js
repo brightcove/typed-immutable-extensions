@@ -1,5 +1,5 @@
 const { Record } = require('typed-immutable');
-const { Maybe, Enum, Discriminator } = require('../src');
+const { Maybe, Enum, Discriminator, extend } = require('../src');
 
 describe('Maybe', () => {
   it('should throw when an invalid type is used', () => {
@@ -602,5 +602,104 @@ describe('Discriminator', () => {
       },
     });
     expect(record.value).to.be.an.instanceOf(D);
+  });
+});
+
+describe('extend()', () => {
+  let A;
+  beforeEach(() => {
+    A = Record({
+      id: String,
+    });
+  });
+
+  it('should throw if no base record is passed', () => {
+    expect(() => {
+      extend();
+    }).to.throw(/BaseRecord must be a Record type/);
+  });
+
+  it('should throw if a non-class is passed for the base record', () => {
+    expect(() => {
+      extend('foo');
+    }).to.throw(/BaseRecord must be a Record type/);
+  });
+
+  it('should throw if the base record is not a Record type', () => {
+    class D {}
+    expect(() => {
+      extend(D);
+    }).to.throw(/BaseRecord must be a Record type/);
+  });
+
+  it('should throw if no descriptor is passed in', () => {
+    expect(() => {
+      extend(A);
+    }).to.throw(/A descriptor of fields is required/);
+  });
+
+  it('should throw if the field descriptor is not an object', () => {
+    expect(() => {
+      extend(A, 'foo');
+    }).to.throw(/A descriptor of fields is required/);
+  });
+
+  it('should throw if no fields are defined in the descriptor object', () => {
+    expect(() => {
+      extend(A, {});
+    }).to.throw(/At least one field must be defined/);
+  });
+
+  it('should throw if any of the field descriptors are nully', () => {
+    expect(() => {
+      extend(A, {
+        value: null,
+      });
+    }).to.throw(/Invalid field descriptor provided for "value" field/);
+  });
+
+  it('should allow extending a record', () => {
+    const B = extend(A, {
+      value: String,
+    });    
+    const b = new B({
+      id: '123',
+      value: 'bar',
+    });
+    expect(b).to.be.an.instanceOf(B);
+    expect(b).to.be.an.instanceOf(A);
+    expect(b).to.be.an.instanceOf(Record.Type);
+    expect(b.size).to.equal(2);
+    expect(b.id).to.equal('123');
+    expect(b.value).to.equal('bar');
+  });
+
+  it('should throw when a value is attempted to be set', () => {
+    const B = extend(A, {
+      value: String,
+    });    
+    const b = new B({
+      id: '123',
+      value: 'bar',
+    });
+    expect(() => {
+      b.value = 'abc';
+    }).to.throw(/Cannot set on an immutable record/);
+  });
+
+  it('should allow setting a value when the record is mutable', () => {
+    const B = extend(A, {
+      value: String,
+    });    
+    let b = new B({
+      id: '123',
+      value: 'bar',
+    });
+    const bMutable = b.asMutable();
+    bMutable.value = 'abc';
+    b = bMutable.asImmutable();
+    expect(b).to.be.an.instanceOf(B);
+    expect(b).to.be.an.instanceOf(A);
+    expect(b.value).to.equal('abc');
   });
 });

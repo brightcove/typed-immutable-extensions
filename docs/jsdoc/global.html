@@ -36,7 +36,7 @@
         <ul></ul>
     </div>
     
-    <div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#Discriminator">Discriminator</a></li><li><a href="global.html#Enum">Enum</a></li><li><a href="global.html#Maybe">Maybe</a></li></ul></div>
+    <div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#Discriminator">Discriminator</a></li><li><a href="global.html#Enum">Enum</a></li><li><a href="global.html#extend">extend</a></li><li><a href="global.html#Maybe">Maybe</a></li></ul></div>
 </nav>
 <div id="resizer"></div>
 
@@ -86,7 +86,7 @@
             
             <div class="container-source members">
                 <code><a href="index.js.html">index.js</a></code>,
-                <code><a href="index.js.html#line129">line 129</a></code>
+                <code><a href="index.js.html#line209">line 209</a></code>
             </div>
             
         </h4>
@@ -330,7 +330,7 @@ const MyRecord = Record({
             
             <div class="container-source members">
                 <code><a href="index.js.html">index.js</a></code>,
-                <code><a href="index.js.html#line74">line 74</a></code>
+                <code><a href="index.js.html#line154">line 154</a></code>
             </div>
             
         </h4>
@@ -515,6 +515,234 @@ const MyRecord = Record({
 
 <dt>
     
+        <h4 class="name" id="extend">
+            
+                <span class="type-signature"></span>extend<span class="signature">(BaseRecord, descriptor, label<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="index.js.html">index.js</a></code>,
+                <code><a href="index.js.html#line23">line 23</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Extends a record type and allows the addition of new fields</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>BaseRecord</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Record</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Record to extend</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>descriptor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Descriptor object of new fields to add</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Label for the new Record type</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>const BaseValue = Record({
+  type: String,
+});
+
+const StringValue = extend(BaseValue, {
+  value: String,
+});
+
+const NumberValue = extend(BaseValue, {
+  value: Number,
+});</code></pre>
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
         <h4 class="name" id="Maybe">
             
                 <span class="type-signature"></span>Maybe<span class="signature">(Type, defaultValue<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
@@ -522,7 +750,7 @@ const MyRecord = Record({
             
             <div class="container-source members">
                 <code><a href="index.js.html">index.js</a></code>,
-                <code><a href="index.js.html#line30">line 30</a></code>
+                <code><a href="index.js.html#line110">line 110</a></code>
             </div>
             
         </h4>

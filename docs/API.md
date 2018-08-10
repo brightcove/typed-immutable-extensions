@@ -1,6 +1,9 @@
 ## Functions
 
 <dl>
+<dt><a href="#extend">extend(BaseRecord, descriptor, [label])</a></dt>
+<dd><p>Extends a record type and allows the addition of new fields</p>
+</dd>
 <dt><a href="#Maybe">Maybe(Type, [defaultValue])</a></dt>
 <dd><p>Defines an optional type, similar to typed-immutable&#39;s <a href="https://github.com/typed-immutable/typed-immutable#maybe">Maybe</a>, but provides extended options.</p>
 <p>Benefits over typed-immutable&#39;s Maybe:</p>
@@ -18,6 +21,33 @@
 </dd>
 </dl>
 
+<a name="extend"></a>
+
+## extend(BaseRecord, descriptor, [label])
+Extends a record type and allows the addition of new fields
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| BaseRecord | <code>Record</code> | Record to extend |
+| descriptor | <code>object</code> | Descriptor object of new fields to add |
+| [label] | <code>string</code> | Label for the new Record type |
+
+**Example**  
+```js
+const BaseValue = Record({
+  type: String,
+});
+
+const StringValue = extend(BaseValue, {
+  value: String,
+});
+
+const NumberValue = extend(BaseValue, {
+  value: Number,
+});
+```
 <a name="Maybe"></a>
 
 ## Maybe(Type, [defaultValue])
