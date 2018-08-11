@@ -1,5 +1,9 @@
 const { Record, Typed, typeOf, Any } = require('typed-immutable');
 
+/* istanbul ignore next */
+//Ponyfill Array.isArray for older browsers
+const isArray = Array.isArray || (x => Object.prototype.toString.call(x) === '[object Array]');
+
 /**
  * Extends a record type and allows the addition of new fields
  * 
@@ -25,17 +29,17 @@ function extend (BaseRecord, descriptor, label) {
     throw new TypeError('BaseRecord must be a Record type');
   }
   if (!descriptor || typeof(descriptor) !== "object") {
-    throw TypeError('A descriptor of fields is required');
+    throw new TypeError('A descriptor of fields is required');
   }
 
   const type = Object.create(null);
-  const entries = Object.entries(descriptor);
-  if (!entries.length) {
+  const keys = Object.keys(descriptor);
+  if (!keys.length) {
     throw new TypeError('At least one field must be defined');
   }
   const properties = {
     size: {
-      value: BaseRecord.prototype.size + entries.length,
+      value: BaseRecord.prototype.size + keys.length,
     },
     [Typed.type]: {
       value: type,
@@ -45,29 +49,33 @@ function extend (BaseRecord, descriptor, label) {
     },
   };
 
-  Object.assign(type, BaseRecord.prototype[Typed.type]);
+  //Copy type definitions from the base Record
+  //NOTE - we don't use Object.assign since we want to be able to support older browsers
+  const baseType = BaseRecord.prototype[Typed.type];
+  Object.keys(baseType).forEach(key => type[key] = baseType[key]);
 
-  for (const [key, value] of entries) {
-    const fieldType = typeOf(value);
+  //Set up type definitions, getters, and setters for descriptor fields
+  keys.forEach(key => {
+    const fieldType = typeOf(descriptor[key]);
 
-    if (fieldType) {
-      type[key] = fieldType;
-      properties[key] = {
-        get: function () {
-          return this.get(key);
-        },
-        set: function (value) {
-          if (!this.__ownerID) {
-            throw TypeError('Cannot set on an immutable record.');
-          }
-          this.set(key, value);
-        },
-        enumerable: true,
-      };
-    } else {
-      throw TypeError(`Invalid field descriptor provided for "${key}" field`);
+    if (!fieldType) {
+      throw new TypeError(`Invalid field descriptor provided for "${key}" field`);
     }
-  }
+
+    type[key] = fieldType;
+    properties[key] = {
+      get: function () {
+        return this.get(key);
+      },
+      set: function (value) {
+        if (!this.__ownerID) {
+          throw new TypeError('Cannot set on an immutable record.');
+        }
+        this.set(key, value);
+      },
+      enumerable: true,
+    };
+  });
 
   const RecordType = function(structure) {
     return BaseRecord.call(this, structure);
@@ -110,12 +118,12 @@ function extend (BaseRecord, descriptor, label) {
 function Maybe (Type, defaultValue) {
   const type = typeOf(Type);
   if (type === Any) {
-    throw TypeError(`${Type} is not a valid type`);
+    throw new TypeError(`${Type} is not a valid type`);
   }
   if (defaultValue != null) {
     defaultValue = type[Typed.read](defaultValue);
     if (defaultValue instanceof TypeError) {
-      throw TypeError(`${defaultValue} is not nully nor of ${type[Typed.typeName]()} type`);
+      throw new TypeError(`${defaultValue} is not nully nor of ${type[Typed.typeName]()} type`);
     }
   }
   if (typeof defaultValue === 'undefined' && typeof type[Typed.defaultValue] !== 'undefined') {
@@ -152,18 +160,18 @@ function Maybe (Type, defaultValue) {
  * });
  */
 function Enum (enumValues, defaultValue) {
-  if (!Array.isArray(enumValues)) {
+  if (!isArray(enumValues)) {
     throw new TypeError(`${enumValues} must be an array`);
   }
   if (!enumValues.length) {
     throw new TypeError(`${enumValues} must contain elements`);
   }
   const enumValueString = enumValues.join(', ');
-  if (typeof defaultValue !== 'undefined' && !enumValues.includes(defaultValue)) {
+  if (typeof defaultValue !== 'undefined' && enumValues.indexOf(defaultValue) < 0) {
     throw new TypeError(`${defaultValue} is not in the set {${enumValueString}}`);
   }
   return Typed(`Enum(${enumValueString})`, value => {
-    if (!enumValues.includes(value)) {
+    if (enumValues.indexOf(value) < 0) {
       return new TypeError(`${value} is not in the set {${enumValueString}}`);
     }
     return value;
@@ -213,10 +221,12 @@ function Discriminator (property, typeMap, defaultType) {
   if (!typeMap || typeof typeMap !== 'object') {
     throw new TypeError(`${typeMap} must be an object`);
   }
-  if (!Object.keys(typeMap).length) {
+  const typeMapKeys = Object.keys(typeMap);
+  if (!typeMapKeys.length) {
     throw new TypeError(`${typeMap} must contain at least one type mapping`);
   }
-  for (const [key, type] of Object.entries(typeMap)) {
+  typeMapKeys.forEach(key => {
+    const type = typeMap[key];
     if (!type || typeof type !== 'function' || !(type.prototype instanceof Record)) {
       throw new TypeError(`${key} type must be a record`);
     }
@@ -226,7 +236,7 @@ function Discriminator (property, typeMap, defaultType) {
     if (type.prototype[Typed.type][property] !== Typed.String.prototype) {
       throw new TypeError(`${key}.${property} must be a String type`);
     }
-  }
+  });
   if (typeof defaultType !== 'undefined') {
     if (!defaultType || typeof defaultType !== 'function' || !(defaultType.prototype instanceof Record)) {
       throw new TypeError('default type must be a record');

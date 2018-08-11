@@ -9,7 +9,7 @@
     "pretest": "npm run lint",
     "test": "nyc --reporter html --reporter text mocha",
     "lint": "eslint src test",
-    "jsdoc": "jsdoc src -c jsdoc.conf.json",
+    "jsdoc": "jsdoc src -c jsdoc.conf.json --readme ./README.md",
     "jsdoc:md": "jsdoc2md --files src/index.js > docs/API.md",
     "jsdoc:all": "npm run jsdoc && npm run jsdoc:md"
   },

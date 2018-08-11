@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>83/83</span>
+        <span class='fraction'>87/87</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>10/10</span>
+        <span class='fraction'>13/13</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>83/83</span>
+        <span class='fraction'>86/86</span>
       </div>
     </div>
     <p class="quiet">
@@ -307,7 +307,21 @@
 <a name='L259'></a><a href='#L259'>259</a>
 <a name='L260'></a><a href='#L260'>260</a>
 <a name='L261'></a><a href='#L261'>261</a>
-<a name='L262'></a><a href='#L262'>262</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a>
+<a name='L269'></a><a href='#L269'>269</a>
+<a name='L270'></a><a href='#L270'>270</a>
+<a name='L271'></a><a href='#L271'>271</a>
+<a name='L272'></a><a href='#L272'>272</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -354,12 +368,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -372,9 +393,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -523,9 +541,11 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">46x</span>
 <span class="cline-any cline-yes">46x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -570,6 +590,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { Record, Typed, typeOf, Any } = require('typed-immutable');
 &nbsp;
+/* istanbul ignore next */
+//Ponyfill Array.isArray for older browsers
+const isArray = Array.isArray || (x =&gt; Object.prototype.toString.call(x) === '[object Array]');
+&nbsp;
 /**
  * Extends a record type and allows the addition of new fields
  * 
@@ -595,49 +619,53 @@ function extend (BaseRecord, descriptor, label) {
     throw new TypeError('BaseRecord must be a Record type');
   }
   if (!descriptor || typeof(descriptor) !== "object") {
-    throw TypeError('A descriptor of fields is required');
+    throw new TypeError('A descriptor of fields is required');
   }
 &nbsp;
   const type = Object.create(null);
-  const entries = Object.entries(descriptor);
-  if (!entries.length) {
+  const keys = Object.keys(descriptor);
+  if (!keys.length) {
     throw new TypeError('At least one field must be defined');
   }
   const properties = {
     size: {
-      value: BaseRecord.prototype.size + entries.length,
+      value: BaseRecord.prototype.size + keys.length,
     },
     [Typed.type]: {
-      value: type
+      value: type,
     },
     [Typed.label]: {
-      value: label
-    }
+      value: label,
+    },
   };
 &nbsp;
-  Object.assign(type, BaseRecord.prototype[Typed.type]);
+  //Copy type definitions from the base Record
+  //NOTE - we don't use Object.assign since we want to be able to support older browsers
+  const baseType = BaseRecord.prototype[Typed.type];
+  Object.keys(baseType).forEach(key =&gt; type[key] = baseType[key]);
 &nbsp;
-  for (const [key, value] of entries) {
-    const fieldType = typeOf(value);
+  //Set up type definitions, getters, and setters for descriptor fields
+  keys.forEach(key =&gt; {
+    const fieldType = typeOf(descriptor[key]);
 &nbsp;
-    if (fieldType) {
-      type[key] = fieldType;
-      properties[key] = {
-        get: function () {
-          return this.get(key);
-        },
-        set: function (value) {
-          if (!this.__ownerID) {
-            throw TypeError('Cannot set on an immutable record.');
-          }
-          this.set(key, value);
-        },
-        enumerable: true
-      };
-    } else {
-      throw TypeError(`Invalid field descriptor provided for "${key}" field`);
+    if (!fieldType) {
+      throw new TypeError(`Invalid field descriptor provided for "${key}" field`);
     }
-  }
+&nbsp;
+    type[key] = fieldType;
+    properties[key] = {
+      get: function () {
+        return this.get(key);
+      },
+      set: function (value) {
+        if (!this.__ownerID) {
+          throw new TypeError('Cannot set on an immutable record.');
+        }
+        this.set(key, value);
+      },
+      enumerable: true,
+    };
+  });
 &nbsp;
   const RecordType = function(structure) {
     return BaseRecord.call(this, structure);
@@ -680,12 +708,12 @@ function extend (BaseRecord, descriptor, label) {
 function Maybe (Type, defaultValue) {
   const type = typeOf(Type);
   if (type === Any) {
-    throw TypeError(`${Type} is not a valid type`);
+    throw new TypeError(`${Type} is not a valid type`);
   }
   if (defaultValue != null) {
     defaultValue = type[Typed.read](defaultValue);
     if (defaultValue instanceof TypeError) {
-      throw TypeError(`${defaultValue} is not nully nor of ${type[Typed.typeName]()} type`);
+      throw new TypeError(`${defaultValue} is not nully nor of ${type[Typed.typeName]()} type`);
     }
   }
   if (typeof defaultValue === 'undefined' &amp;&amp; typeof type[Typed.defaultValue] !== 'undefined') {
@@ -722,18 +750,18 @@ function Maybe (Type, defaultValue) {
  * });
  */
 function Enum (enumValues, defaultValue) {
-  if (!Array.isArray(enumValues)) {
+  if (!isArray(enumValues)) {
     throw new TypeError(`${enumValues} must be an array`);
   }
   if (!enumValues.length) {
     throw new TypeError(`${enumValues} must contain elements`);
   }
   const enumValueString = enumValues.join(', ');
-  if (typeof defaultValue !== 'undefined' &amp;&amp; !enumValues.includes(defaultValue)) {
+  if (typeof defaultValue !== 'undefined' &amp;&amp; enumValues.indexOf(defaultValue) &lt; 0) {
     throw new TypeError(`${defaultValue} is not in the set {${enumValueString}}`);
   }
   return Typed(`Enum(${enumValueString})`, value =&gt; {
-    if (!enumValues.includes(value)) {
+    if (enumValues.indexOf(value) &lt; 0) {
       return new TypeError(`${value} is not in the set {${enumValueString}}`);
     }
     return value;
@@ -783,10 +811,12 @@ function Discriminator (property, typeMap, defaultType) {
   if (!typeMap || typeof typeMap !== 'object') {
     throw new TypeError(`${typeMap} must be an object`);
   }
-  if (!Object.keys(typeMap).length) {
+  const typeMapKeys = Object.keys(typeMap);
+  if (!typeMapKeys.length) {
     throw new TypeError(`${typeMap} must contain at least one type mapping`);
   }
-  for (const [key, type] of Object.entries(typeMap)) {
+  typeMapKeys.forEach(key =&gt; {
+    const type = typeMap[key];
     if (!type || typeof type !== 'function' || !(type.prototype instanceof Record)) {
       throw new TypeError(`${key} type must be a record`);
     }
@@ -796,7 +826,7 @@ function Discriminator (property, typeMap, defaultType) {
     if (type.prototype[Typed.type][property] !== Typed.String.prototype) {
       throw new TypeError(`${key}.${property} must be a String type`);
     }
-  }
+  });
   if (typeof defaultType !== 'undefined') {
     if (!defaultType || typeof defaultType !== 'function' || !(defaultType.prototype instanceof Record)) {
       throw new TypeError('default type must be a record');
@@ -835,7 +865,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Aug 09 2018 18:09:00 GMT-0400 (Eastern Daylight Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Aug 11 2018 10:00:34 GMT-0400 (Eastern Daylight Time)
 </div>
 </div>
 <script src="prettify.js"></script>
