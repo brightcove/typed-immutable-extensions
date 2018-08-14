@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/brightcove/typed-immutable-extensions.svg?branch=master)](https://travis-ci.org/brightcove/typed-immutable-extensions)
+[![codecov](https://codecov.io/gh/brightcove/typed-immutable-extensions/branch/master/graph/badge.svg)](https://codecov.io/gh/brightcove/typed-immutable-extensions)
 
 # typed-immutable-extensions
 
