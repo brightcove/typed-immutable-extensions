@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/brightcove/typed-immutable-extensions.svg?branch=master)](https://travis-ci.org/brightcove/typed-immutable-extensions)
+
 # typed-immutable-extensions
 
 This library adds some extension types on top of [typed-immutable](https://github.com/typed-immutable/typed-immutable) which make it infinitely more usable.
