@@ -2,3 +2,8 @@ language: node_js
 node_js:
   - "node"
   - "lts/*"
+install:
+  - npm install -g codecov
+script:
+  - nyc report --reporter=text-lcov > coverage.lcov
+  - codecov
