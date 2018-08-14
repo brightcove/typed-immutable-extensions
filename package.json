@@ -1,6 +1,6 @@
 {
   "name": "@brightcove/typed-immutable-extensions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Extensions on top of typed-immutable to make it better",
   "main": "lib/index.js",
   "scripts": {
