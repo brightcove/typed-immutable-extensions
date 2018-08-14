@@ -7,7 +7,7 @@ This library adds some extension types on top of [typed-immutable](https://githu
 ### Installation
 
 ```bash
-npm i typed-immutable-extensions
+npm i @brightcove/typed-immutable-extensions
 ```
 
 ### API
@@ -28,9 +28,6 @@ Please see the [API documentation](docs/API.md).
 
 Contributions are welcome, please see the [contributing guidelines](CONTRIBUTING.md).
 
-## Issues
+## Issues and Questions
 
-This project uses github issues
-
-## Questions
-
+This project uses github issues, please file issues and questions [here](https://github.com/brightcove/typed-immutable-extensions).

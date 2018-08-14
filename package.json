@@ -1,5 +1,5 @@
 {
-  "name": "typed-immutable-extensions",
+  "name": "@brightcove/typed-immutable-extensions",
   "version": "0.1.0",
   "description": "Extensions on top of typed-immutable to make it better",
   "main": "lib/index.js",
@@ -12,6 +12,10 @@
     "jsdoc": "jsdoc src -c jsdoc.conf.json --readme ./README.md",
     "jsdoc:md": "jsdoc2md --files src/index.js > docs/API.md",
     "jsdoc:all": "npm run jsdoc && npm run jsdoc:md"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brightcove/typed-immutable-extensions"
   },
   "author": "Ted Janeczko <tjaneczko@brightcove.com>",
   "license": "Apache-2.0",
