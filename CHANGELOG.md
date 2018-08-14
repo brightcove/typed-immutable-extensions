@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.0] - 2018-08-13
+
 ### Added
 
 - `Maybe`, `Enum`, and `Discriminator` types
