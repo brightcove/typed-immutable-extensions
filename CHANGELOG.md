@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- `prepare` task to build the library
+- `prepublishOnly` task to build the library
 - `files` specifier in `package.json` to restrict which files are packaged
 
 ### Changed

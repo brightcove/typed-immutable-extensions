@@ -12,7 +12,7 @@
     "jsdoc": "jsdoc src -c jsdoc.conf.json --readme ./README.md",
     "jsdoc:md": "jsdoc2md --files src/index.js > docs/API.md",
     "jsdoc:all": "npm run jsdoc && npm run jsdoc:md",
-    "prepare": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
