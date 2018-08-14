@@ -14,7 +14,7 @@
     "jsdoc:all": "npm run jsdoc && npm run jsdoc:md"
   },
   "author": "Ted Janeczko <tjaneczko@brightcove.com>",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
