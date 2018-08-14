@@ -5,5 +5,4 @@ node_js:
 install:
   - npm install -g codecov
 script:
-  - nyc report --reporter=text-lcov > coverage.lcov
-  - codecov
+  - npm test && npm run report && codecov

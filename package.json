@@ -8,6 +8,7 @@
     "build:all": "npm run build && npm run jsdoc",
     "pretest": "npm run lint",
     "test": "nyc --reporter html --reporter text mocha",
+    "report": "nyc report --reporter=text-lcov > coverage.lcov",
     "lint": "eslint src test",
     "jsdoc": "jsdoc2md --files src/index.js > docs/API.md",
     "prepublishOnly": "npm run build"
