@@ -14,7 +14,7 @@ npm i @brightcove/typed-immutable-extensions
 
 ### API
 
-Please see the [API documentation](docs/API.md).
+Please see the [API documentation](https://github.com/brightcove/typed-immutable-extensions/blob/master/docs/API.md).
 
 ## Info
 
@@ -28,7 +28,7 @@ Please see the [API documentation](docs/API.md).
 
 ## Contributions
 
-Contributions are welcome, please see the [contributing guidelines](CONTRIBUTING.md).
+Contributions are welcome, please see the [contributing guidelines](https://github.com/brightcove/typed-immutable-extensions/blob/master/CONTRIBUTING.md).
 
 ## Issues and Questions
 
