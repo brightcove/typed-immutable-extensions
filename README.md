@@ -32,4 +32,4 @@ Contributions are welcome, please see the [contributing guidelines](CONTRIBUTING
 
 ## Issues and Questions
 
-This project uses github issues, please file issues and questions [here](https://github.com/brightcove/typed-immutable-extensions).
+This project uses github issues, please file issues and questions [here](https://github.com/brightcove/typed-immutable-extensions/issues).
