@@ -26,7 +26,7 @@ Please see the [API documentation](https://github.com/brightcove/typed-immutable
 
 ## Maintainers
 
-- Ted Janeczko - @tjaneczko
+- Ted Janeczko - [@tjaneczko](https://github.com/tjaneczko)
 
 ## Contributions
 
