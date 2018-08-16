@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## Fixed
+
+- Fixed `Typed.typeName` specifiers for `Maybe`, `Enum` and `Discriminator`
+
+### Changed
+
+- Moved logic for `Maybe`, `Enum`, and `Discriminator` into separate classes which expose some typing information
+
 ### Removed
 
 - jsdoc, we are now only using jsdoc-to-markdown
