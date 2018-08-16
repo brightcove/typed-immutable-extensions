@@ -1,4 +1,4 @@
-const { Record } = require('typed-immutable');
+const { Record, Typed } = require('typed-immutable');
 const { Maybe, Enum, Discriminator, extend } = require('../src');
 
 describe('Maybe', () => {
@@ -12,6 +12,18 @@ describe('Maybe', () => {
     expect(() => {
       Maybe(String, 0);
     }).to.throw(/is not nully nor of String type/);
+  });
+
+  it('should set the Typed.type property', () => {
+    expect(Maybe(String)).to.have.property(Typed.type, Typed.String.prototype);
+  });
+
+  it('should have an appropriate Typed.typeValue with no default value', () => {
+    expect(Maybe(String)[Typed.typeName]()).to.equal('Maybe(String)');
+  });
+
+  it('should have an appropriate Typed.typeValue with a default value', () => {
+    expect(Maybe(String, 'abc')[Typed.typeName]()).to.equal('Maybe(String, "abc")');
   });
 
   it('should allow an undefined value', () => {
@@ -249,6 +261,14 @@ describe('Enum', () => {
     record = record.delete('value');
     expect(record.value).to.equal('bar');
   });
+
+  it('should have an appropriate Typed.typeValue with no default value', () => {
+    expect(Enum(['foo', 'bar'])[Typed.typeName]()).to.equal('Enum(["foo","bar"])');
+  });
+
+  it('should have an appropriate Typed.typeValue with a default value', () => {
+    expect(Enum(['foo', 'bar'], 'foo')[Typed.typeName]()).to.equal('Enum(["foo","bar"], "foo")');
+  });
 });
 
 describe('Discriminator', () => {
@@ -259,15 +279,15 @@ describe('Discriminator', () => {
   beforeEach(() => {
     A = Record({
       type: String,
-    });
+    }, 'A');
 
     B = Record({
       type: String,
-    });
+    }, 'B');
 
     C = Record({
       type: String,
-    });
+    }, 'C');
   });
 
   it('should throw if the property is not specified', () => {
@@ -602,6 +622,20 @@ describe('Discriminator', () => {
       },
     });
     expect(record.value).to.be.an.instanceOf(D);
+  });
+
+  it('should have an appropriate Typed.typeValue with no default value', () => {
+    expect(Discriminator('type', {
+      a: A,
+      b: B,
+    })[Typed.typeName]()).to.equal('Discriminator("type", {"a":"A","b":"B"})');
+  });
+
+  it('should have an appropriate Typed.typeValue with a default value', () => {
+    expect(Discriminator('type', {
+      a: A,
+      b: B,
+    }, C)[Typed.typeName]()).to.equal('Discriminator("type", {"a":"A","b":"B"}, "C")');
   });
 });
 

@@ -1,4 +1,4 @@
-const { Record, Typed, typeOf, Any } = require('typed-immutable');
+const { Record, Typed, typeOf, Any, Type } = require('typed-immutable');
 
 /* istanbul ignore next */
 //Ponyfill Array.isArray for older browsers
@@ -24,7 +24,7 @@ const isArray = Array.isArray || (x => Object.prototype.toString.call(x) === '[o
  *   value: Number,
  * });
  */
-function extend (BaseRecord, descriptor, label) {
+module.exports.extend = (BaseRecord, descriptor, label) => {
   if (!BaseRecord || typeof BaseRecord !== 'function' || !(BaseRecord.prototype instanceof Record)) {
     throw new TypeError('BaseRecord must be a Record type');
   }
@@ -86,6 +86,54 @@ function extend (BaseRecord, descriptor, label) {
   RecordType.prototype = Object.create(BaseRecord.prototype, properties);
 
   return RecordType;
+};
+
+/**
+ * Class for implementing Maybe
+ * @private
+ */
+class MaybeType extends Type {
+  constructor(type, defaultValue) {
+    super();
+    this[Typed.type] = typeOf(type);
+    if (this[Typed.type] === Any) {
+      throw new TypeError(`${type} is not a valid type`);
+    }
+    if (defaultValue != null) {
+      this[Typed.defaultValue] = this[Typed.type][Typed.read](defaultValue);
+      if (this[Typed.defaultValue] instanceof TypeError) {
+        throw new TypeError(`${defaultValue} is not nully nor of ${this[Typed.type][Typed.typeName]()} type`);
+      }
+    } else {
+      this[Typed.defaultValue] = defaultValue;
+    }
+    if (typeof this[Typed.defaultValue] === 'undefined' && typeof this[Typed.type][Typed.defaultValue] !== 'undefined') {
+      this[Typed.defaultValue] = this[Typed.type][Typed.defaultValue];
+    }
+  }
+
+  [Typed.typeName]() {
+    const typeName = this[Typed.type][Typed.typeName]();
+    const defaultValue = this[Typed.defaultValue];
+    if (typeof defaultValue === 'undefined') {
+      return `Maybe(${typeName})`;
+    }
+    return `Maybe(${typeName}, ${JSON.stringify(defaultValue)})`;
+  }
+
+  [Typed.read](value = this[Typed.defaultValue]) {
+    let result;
+    if (value == null) {
+      result = value;
+    } else {
+      result = this[Typed.type][Typed.read](value);
+    }
+
+    if (result instanceof TypeError) {
+      return TypeError(`"${value}" is not nully nor it is of ${this[Typed.type][Typed.typeName]()} type`);
+    }
+    return result;
+  }
 }
 
 /**
@@ -115,34 +163,44 @@ function extend (BaseRecord, descriptor, label) {
  *  title: Maybe(String, null),
  *});
  */
-function Maybe (Type, defaultValue) {
-  const type = typeOf(Type);
-  if (type === Any) {
-    throw new TypeError(`${Type} is not a valid type`);
-  }
-  if (defaultValue != null) {
-    defaultValue = type[Typed.read](defaultValue);
-    if (defaultValue instanceof TypeError) {
-      throw new TypeError(`${defaultValue} is not nully nor of ${type[Typed.typeName]()} type`);
+module.exports.Maybe = (Type, defaultValue) => new MaybeType(Type, defaultValue);
+module.exports.Maybe.Type = MaybeType;
+
+/**
+ * Class for implementing Enum
+ * @private
+ */
+class EnumType extends Type {
+  constructor(enumValues, defaultValue) {
+    super();
+    this[Typed.type] = enumValues;
+    this[Typed.defaultValue] = defaultValue;
+    if (!isArray(enumValues)) {
+      throw new TypeError(`${enumValues} must be an array`);
     }
-  }
-  if (typeof defaultValue === 'undefined' && typeof type[Typed.defaultValue] !== 'undefined') {
-    defaultValue = type[Typed.defaultValue];
+    if (!enumValues.length) {
+      throw new TypeError(`${enumValues} must contain elements`);
+    }
+    if (typeof defaultValue !== 'undefined' && enumValues.indexOf(defaultValue) < 0) {
+      throw new TypeError(`${defaultValue} is not in the set {${enumValues.join(', ')}}`);
+    }
   }
 
-  return Typed(`Maybe(${type[Typed.typeName]()})`, value => {
-    let result;
-    if (value == null) {
-      result = value;
-    } else {
-      result = type[Typed.read](value);
+  [Typed.typeName]() {
+    const enumValues = JSON.stringify(this[Typed.type]);
+    const defaultValue = this[Typed.defaultValue];
+    if (typeof defaultValue === 'undefined') {
+      return `Enum(${enumValues})`;
     }
+    return `Enum(${enumValues}, ${JSON.stringify(defaultValue)})`;
+  }
 
-    if (result instanceof TypeError) {
-      return TypeError(`"${value}" is not nully nor it is of ${type[Typed.typeName]()} type`);
+  [Typed.read](value = this[Typed.defaultValue]) {
+    if (this[Typed.type].indexOf(value) < 0) {
+      return new TypeError(`${value} is not in the set {${this[Typed.type].join(', ')}}`);
     }
-    return result;
-  }, defaultValue);
+    return value;
+  }
 }
 
 /**
@@ -159,23 +217,82 @@ function Maybe (Type, defaultValue) {
  *   alignment: Enum(['left', 'center', 'right'], 'left')
  * });
  */
-function Enum (enumValues, defaultValue) {
-  if (!isArray(enumValues)) {
-    throw new TypeError(`${enumValues} must be an array`);
-  }
-  if (!enumValues.length) {
-    throw new TypeError(`${enumValues} must contain elements`);
-  }
-  const enumValueString = enumValues.join(', ');
-  if (typeof defaultValue !== 'undefined' && enumValues.indexOf(defaultValue) < 0) {
-    throw new TypeError(`${defaultValue} is not in the set {${enumValueString}}`);
-  }
-  return Typed(`Enum(${enumValueString})`, value => {
-    if (enumValues.indexOf(value) < 0) {
-      return new TypeError(`${value} is not in the set {${enumValueString}}`);
+module.exports.Enum = (enumValues, defaultValue) => new EnumType(enumValues, defaultValue);
+module.exports.Enum.Type = EnumType;
+
+/**
+ * Class for implementing Discriminator
+ * @private
+ */
+class DiscriminatorType extends Type {
+  constructor(property, typeMap, defaultType) {
+    super();
+    this[Typed.type] = {
+      property,
+      typeMap,
+      defaultType,
+    };
+    if (!property || typeof property !== 'string') {
+      throw new TypeError(`${property} must be a string`);
     }
-    return value;
-  }, defaultValue);
+    if (!typeMap || typeof typeMap !== 'object') {
+      throw new TypeError(`${typeMap} must be an object`);
+    }
+    const typeMapKeys = Object.keys(typeMap);
+    if (!typeMapKeys.length) {
+      throw new TypeError(`${typeMap} must contain at least one type mapping`);
+    }
+    typeMapKeys.forEach(key => {
+      const type = typeMap[key];
+      if (!type || typeof type !== 'function' || !(type.prototype instanceof Record)) {
+        throw new TypeError(`${key} type must be a record`);
+      }
+      if (!(property in type.prototype)) {
+        throw new TypeError(`${key} type must have a ${property} property`);
+      }
+      if (type.prototype[Typed.type][property] !== Typed.String.prototype) {
+        throw new TypeError(`${key}.${property} must be a String type`);
+      }
+    });
+    if (typeof defaultType !== 'undefined') {
+      if (!defaultType || typeof defaultType !== 'function' || !(defaultType.prototype instanceof Record)) {
+        throw new TypeError('default type must be a record');
+      }
+      if (!(property in defaultType.prototype)) {
+        throw new TypeError(`default type must have a ${property} property`);
+      }
+      if (defaultType.prototype[Typed.type][property] !== Typed.String.prototype) {
+        throw new TypeError(`default.${property} must be a String type`);
+      }
+    }
+  }
+
+  [Typed.typeName]() {
+    const { property, typeMap, defaultType } = this[Typed.type];
+    const typeMapString = JSON.stringify(Object.keys(typeMap).reduce((obj, key) => {
+      obj[key] = typeMap[key].prototype[Typed.typeName]();
+      return obj;
+    }, {}));
+    if (typeof defaultType === 'undefined') {
+      return `Discriminator(${JSON.stringify(property)}, ${typeMapString})`;
+    }
+    return `Discriminator(${JSON.stringify(property)}, ${typeMapString}, ${JSON.stringify(defaultType.prototype[Typed.typeName]())})`;
+  }
+
+  [Typed.read](value) {
+    const { property, typeMap, defaultType } = this[Typed.type];
+    if (!value || typeof value !== 'object') {
+      return new TypeError(`${value} is not an object`);
+    }
+    if (!(property in value)) {
+      return new TypeError(`${value} does not have a ${property} property`);
+    }
+    const type = typeMap[value[property]] || defaultType;
+    if (typeof type === 'undefined') {
+      return new TypeError(`${value[property]} is not in the set {${Object.keys(typeMap).join(', ')}}`);
+    }
+    return value instanceof type ? value : new type(value);
+  }
 }
 
 /**
@@ -214,58 +331,5 @@ function Enum (enumValues, defaultValue) {
  *   }, AnyValue),
  * });
  */
-function Discriminator (property, typeMap, defaultType) {
-  if (!property || typeof property !== 'string') {
-    throw new TypeError(`${property} must be a string`);
-  }
-  if (!typeMap || typeof typeMap !== 'object') {
-    throw new TypeError(`${typeMap} must be an object`);
-  }
-  const typeMapKeys = Object.keys(typeMap);
-  if (!typeMapKeys.length) {
-    throw new TypeError(`${typeMap} must contain at least one type mapping`);
-  }
-  typeMapKeys.forEach(key => {
-    const type = typeMap[key];
-    if (!type || typeof type !== 'function' || !(type.prototype instanceof Record)) {
-      throw new TypeError(`${key} type must be a record`);
-    }
-    if (!(property in type.prototype)) {
-      throw new TypeError(`${key} type must have a ${property} property`);
-    }
-    if (type.prototype[Typed.type][property] !== Typed.String.prototype) {
-      throw new TypeError(`${key}.${property} must be a String type`);
-    }
-  });
-  if (typeof defaultType !== 'undefined') {
-    if (!defaultType || typeof defaultType !== 'function' || !(defaultType.prototype instanceof Record)) {
-      throw new TypeError('default type must be a record');
-    }
-    if (!(property in defaultType.prototype)) {
-      throw new TypeError(`default type must have a ${property} property`);
-    }
-    if (defaultType.prototype[Typed.type][property] !== Typed.String.prototype) {
-      throw new TypeError(`default.${property} must be a String type`);
-    }
-  }
-  return Typed(`Discriminator(${property})`, value => {
-    if (!value || typeof value !== 'object') {
-      return new TypeError(`${value} is not an object`);
-    }
-    if (!(property in value)) {
-      return new TypeError(`${value} does not have a ${property} property`);
-    }
-    const type = typeMap[value[property]] || defaultType;
-    if (typeof type === 'undefined') {
-      return new TypeError(`${value[property]} is not in the set {${Object.keys(typeMap).join(', ')}}`);
-    }
-    return value instanceof type ? value : new type(value);
-  });
-}
-
-module.exports = {
-  extend,
-  Maybe,
-  Enum,
-  Discriminator,
-};
+module.exports.Discriminator = (property, typeMap, defaultType) => new DiscriminatorType(property, typeMap, defaultType);
+module.exports.Discriminator.Type = DiscriminatorType;
