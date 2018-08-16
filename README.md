@@ -1,4 +1,5 @@
 [![Version](https://img.shields.io/npm/v/@brightcove/typed-immutable-extensions.svg)](https://www.npmjs.com/package/@brightcove/typed-immutable-extensions)
+[![Downloads](https://img.shields.io/npm/dt/@brightcove/typed-immutable-extensions.svg)](https://www.npmjs.com/package/@brightcove/typed-immutable-extensions)
 [![Build Status](https://travis-ci.org/brightcove/typed-immutable-extensions.svg?branch=master)](https://travis-ci.org/brightcove/typed-immutable-extensions)
 [![Coverage](https://img.shields.io/codecov/c/github/brightcove/typed-immutable-extensions/master.svg)](https://codecov.io/gh/brightcove/typed-immutable-extensions)
 [![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/typed-immutable-extensions.svg)](https://greenkeeper.io/)
