@@ -1,11 +1,19 @@
 language: node_js
 node_js:
-  - "node"
-  - "lts/*"
+- node
+- lts/*
 install:
-  - npm i
-  - npm i -g codecov
+- npm i
+- npm i -g codecov
 script:
-  - npm test
-  - npm run report
-  - codecov
+- npm test
+- npm run report
+- codecov
+deploy:
+  provider: npm
+  email: "tjaneczko@brightcove.com",
+  api_key:
+    secure: W/LpLXMt9GLvJUq+mK0apmzoic2WavZwtV1Rz38ZCgPZeMub7AL+X930LsaiSKIY87l/Oa1UGaHfTa3+r7Zs0VGbiawPYoT9wf0+HeGE2c/AoIEynNsj6qJUlnkaGTRDPF60yFsxmvlclVLou8adM4vXAvT83C+UpGAccqobnKPTmD5zUWl3JRKhsD72cNGunanpzHP1p7yPVCtjaIpKioucHEAE5EWnUzB8pKXIXN9dKvrownG/9xTL4Gt7n8JZevhtub3s0SWpjF91WrQ/JcG+OH5q6V+HVuMkBOPp6JO59zkkQ6kSm8zML29OxtNQiLO6YuLJGw4ppwZWs+PsOseARs4W3Zec9V7Wn0yKJXPqEwKCbOD+iN3zGRpH/EG/zI+sR6IbqqTJ0WaNRnDbHD7u230q0rrBy/t3lGIAlBj8OIdpdsX5s7DgeuDbA/gOxdTQm+hCU/DkyjB2r4hwgh3qSaVXbkM+BX6BSlqt84NXem1Tklaquu/W7ExC6Ykt01aAyPaS01gK5zuF0fvvjggE7InU4cAJW6Q2qTKrkCC7EsbXc0/Ywj7RRRQerKfqTi5frJeCAPY26ojLqhzX4CoGmuUYWrQ2dA3s/1LE07AFJrGA0IAloe7x7gilypK0hD61dpM6XrCMzcrAwmqWBTKnQFuwrL27zbWHOFEofOk=
+  on:
+    tags: true
+    node: lts/*
