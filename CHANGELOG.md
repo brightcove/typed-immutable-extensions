@@ -7,19 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Fixed
-
-- Updated mocha library to fix vulnerabilities
+## [0.1.3] - 2019-07-18
 
 ### Added
 
 - Added automated deploys of new versions
 
-## [0.1.2] - 2018-08-16
-
 ### Fixed
 
-- Fixed `Typed.typeName` specifiers for `Maybe`, `Enum` and `Discriminator`
+- Updated mocha library to fix vulnerabilities
+
+## [0.1.2] - 2018-08-16
 
 ### Changed
 
@@ -28,6 +26,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 
 - jsdoc, we are now only using jsdoc-to-markdown
+
+### Fixed
+
+- Fixed `Typed.typeName` specifiers for `Maybe`, `Enum` and `Discriminator`
 
 ## [0.1.1] - 2018-08-13
 
@@ -44,10 +46,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `lib` from git repo
 
-## [0.1.0] - 2018-08-13
+## 0.1.0 - 2018-08-13
 
 ### Added
 
 - `Maybe`, `Enum`, and `Discriminator` types
 - `extends` function for extending Records
 - API documentation with jsdoc and jsdoc-to-markdown
+
+[Unreleased]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.2...v0.1.3
+[0.1.2]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.0...v0.1.1
