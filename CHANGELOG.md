@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Updated nyc library to fix vulnerabilities
+
 ## [0.1.4] - 2019-08-29
 ### Fixed
 - Updated eslint and mocha library to fix vulnerabilities
