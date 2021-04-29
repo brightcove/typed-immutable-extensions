@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.7] - 2020-10-08
+### Fixed
+- Updated dependencies to fix vulnerabilities
+
 ## [0.1.6] - 2020-04-06
 ### Fixed
 - Updated package-lock.json to fix vulnerabilities
@@ -53,7 +57,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `extends` function for extending Records
 - API documentation with jsdoc and jsdoc-to-markdown
 
-[Unreleased]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.6...HEAD
+[Unreleased]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.7...HEAD
+[0.1.7]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/brightcove/typed-immutable-extensions/compare/v0.1.3...v0.1.4
